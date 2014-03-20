@@ -1,21 +1,9 @@
-import java.awt.Image;
+
 import java.awt.event.KeyEvent;
 
-public class Bird {
+public class Bird extends GameObject{
 
-    public int x;
-    public int y;
-    public int width;
-    public int height;
-
-    // y velocity
-    public double yvel;
-    public double gravity;
-
-    // delay between key presses
     private int jumpDelay;
-
-    private Image image;
     private Keyboard keyboard;
 
     public Bird () {
@@ -24,7 +12,6 @@ public class Bird {
         yvel = 0;
         width = 45;
         height = 32;
-        gravity = 0.5;
         jumpDelay = 0;
 
         keyboard = Keyboard.getInstance();
@@ -42,19 +29,9 @@ public class Bird {
         }
 
         y += (int)yvel;
-    }
-
-    public Render getRender() {
-
-        Render r = new Render();
-        r.x = x;
-        r.y = y;
-
-        if (image == null) {
-            image = Util.loadImage("lib/bird.png");     
+        if (y + height > App.HEIGHT - 80) {
+            alive = false;
         }
-        r.image = image;
-
-        return r;
     }
 }
+

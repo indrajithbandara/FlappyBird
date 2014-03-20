@@ -1,3 +1,4 @@
+
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
@@ -5,6 +6,7 @@ public class Game {
     
     public Keyboard keyboard;
     public Bird bird;
+    public Ring ring;
     public Background background;
 
     public Boolean paused;
@@ -23,6 +25,13 @@ public class Game {
 
     public void update () {
 
+
+        if (restartDelay > 0)
+            restartDelay--;
+        if (keyboard.isDown(KeyEvent.VK_R) && restartDelay <= 0) {
+            restart();
+            restartDelay = 5;
+        }
         if (!started && keyboard.isDown(KeyEvent.VK_SPACE)) {
             started = true;
         }
@@ -38,18 +47,10 @@ public class Game {
             pauseDelay = 10;
         }
 
-        if (restartDelay > 0)
-            restartDelay--;
-
-        if (keyboard.isDown(KeyEvent.VK_R) && restartDelay <= 0) {
-            restart();
-            restartDelay = 10;
-        }
-
         if (!paused && !gameover) {
 
         	bird.update();
-
+        	ring.update();
             if (bird.y + bird.height > App.HEIGHT - 80) {
                 gameover = true;
 
@@ -61,7 +62,7 @@ public class Game {
 
     public void restart () {
         bird = new Bird();
-
+        ring = new Ring();
         paused = false;
         gameover = false;
         started = false;
@@ -73,7 +74,8 @@ public class Game {
     public ArrayList<Render> getRenders() {
         ArrayList<Render> renders = new ArrayList<Render>();
         renders.add(background.getRender());
-        renders.add(bird.getRender());
+        renders.add(bird.getRender("res/bird.png"));
+        renders.add(ring.getRender("res/ring.png"));
         return renders;
     }
 }

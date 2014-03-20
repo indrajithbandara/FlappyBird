@@ -13,7 +13,7 @@ public class Background {
         r.y = y;
         
         if (image == null) {
-            image = Util.loadImage("lib/background.png");     
+            image = Util.loadImage("res/background.png");     
         }
         r.image = image;
 
