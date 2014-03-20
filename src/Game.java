@@ -3,23 +3,26 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public class Game {
-    
     public Keyboard keyboard;
-    public Bird bird;
-    public Ring ring;
+
     public Background background;
+    public GameObjectHandler gameObjectHandler = new GameObjectHandler();
 
     public Boolean paused;
-    public Boolean gameover;
+    public static Boolean gameover;
     public Boolean started;
 
-    public int pauseDelay;
-    public int restartDelay;
+    public static int score, highScore;
+    public int pauseDelay, restartDelay, ringDelay, skullDelay;
+    public int pauseDelayTime, restartDelayTime, ringDelayTime, skullDelayTime;
 
     public Game () {
         keyboard = Keyboard.getInstance();
         background = new Background();
-
+        restartDelayTime = 5;
+        pauseDelay = 100;
+        ringDelayTime = 30;
+        skullDelayTime = 30;
         restart();
     }
 
@@ -28,9 +31,11 @@ public class Game {
 
         if (restartDelay > 0)
             restartDelay--;
+        if(skullDelay > 0)
+        	skullDelay--;
         if (keyboard.isDown(KeyEvent.VK_R) && restartDelay <= 0) {
             restart();
-            restartDelay = 5;
+            restartDelay = restartDelayTime;
         }
         if (!started && keyboard.isDown(KeyEvent.VK_SPACE)) {
             started = true;
@@ -41,41 +46,57 @@ public class Game {
 
         if (pauseDelay > 0)
             pauseDelay--;
-
+        
+        if (ringDelay > 0)
+            ringDelay--;
+        
         if (keyboard.isDown(KeyEvent.VK_P) && pauseDelay <= 0) {
             paused = !paused;
-            pauseDelay = 10;
+            pauseDelay = pauseDelayTime;
         }
-
-        if (!paused && !gameover) {
-
-        	bird.update();
-        	ring.update();
-            if (bird.y + bird.height > App.HEIGHT - 80) {
-                gameover = true;
-
-                // keep the bird above ground
-                bird.y = App.HEIGHT - 80 - bird.height;
-            }
+        if(skullDelay <= 0)
+        {
+        	gameObjectHandler.gameObjects.add(new Rock());
+        	skullDelay = skullDelayTime;
+        }
+        if(ringDelay <= 0)
+        {
+        	gameObjectHandler.gameObjects.add(new Ring());
+        	ringDelay = ringDelayTime;
+        }
+        if (!paused) {
+        	gameObjectHandler.update();
+            
+        }
+        if(!gameObjectHandler.bird.alive)
+        {
+        	gameover = true;
         }
     }
 
     public void restart () {
-        bird = new Bird();
-        ring = new Ring();
+    	gameObjectHandler = new GameObjectHandler();
         paused = false;
         gameover = false;
         started = false;
 
         pauseDelay = 0;
         restartDelay = 0;
+        ringDelay = 0;
+        score = 0;
     }
     
     public ArrayList<Render> getRenders() {
         ArrayList<Render> renders = new ArrayList<Render>();
         renders.add(background.getRender());
-        renders.add(bird.getRender("res/bird.png"));
-        renders.add(ring.getRender("res/ring.png"));
+        gameObjectHandler.bird.getRender();
+        for(GameObject gameObject : gameObjectHandler.gameObjects)
+        {
+        	if(gameObject != null)
+        	{
+        		renders.add(gameObject.getRender());
+        	}
+        }
         return renders;
     }
 }

@@ -1,7 +1,7 @@
 
-public class Ring extends GameObject{
-	public boolean collected = false;
-	public Ring()
+public class Rock extends Enemy
+{
+	public Rock()
 	{
         width = 32;
         height = 32;
@@ -9,16 +9,15 @@ public class Ring extends GameObject{
 		x = App.WIDTH;
         y = rnd.nextInt(maxY);
         xvel = 0;
-        path = "res/ring.png";
+        path = "res/rock.png";
 	}
 	public void update()
 	{
-		xvel += .125;
+		xvel += .25;
 		x -= (int)xvel;
 		if(x + width < 0)
 		{
 			alive = false;
 		}
 	}
-
 }

@@ -1,8 +1,9 @@
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.util.Random;
 
 
-public class GameObject
+public abstract class GameObject
 {
 	public boolean alive = true;
     public int x;
@@ -16,7 +17,8 @@ public class GameObject
     public final double gravity = .5;
     protected Image image;
     protected Random rnd = new Random();
-    public Render getRender(String path) {
+    protected String path;
+    public Render getRender() {
 
         Render r = new Render();
         r.x = x;
@@ -29,4 +31,16 @@ public class GameObject
 
         return r;
     }
+    public void update(){}
+    public void doCollide(GameObject gameObject){}
+	private boolean collide(Rectangle r)
+	{
+		 if(r.intersects(new Rectangle((int)x, (int)y, (int)width, (int)height)))return true;
+		 return false;
+	}
+	public boolean collide(GameObject o)
+	{
+		 if(o.collide(new Rectangle((int)x, (int)y, (int)width, (int)height)))return true;
+		 return false;
+	}
 }

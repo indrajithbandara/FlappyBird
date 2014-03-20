@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 public class Bird extends GameObject{
 
     private int jumpDelay;
+    public int hunger, maxHunger = 1000;
     private Keyboard keyboard;
 
     public Bird () {
@@ -15,9 +16,13 @@ public class Bird extends GameObject{
         jumpDelay = 0;
 
         keyboard = Keyboard.getInstance();
+        path = "res/bird.png";
+        hunger = maxHunger;
     }
 
     public void update () {
+    	if(hunger > 0)hunger--;
+    	else alive = false;
         yvel += gravity;
 
         if (jumpDelay > 0)
@@ -33,5 +38,17 @@ public class Bird extends GameObject{
             alive = false;
         }
     }
+	public void doCollide(GameObject gameObject)
+	{
+		if(gameObject instanceof Ring)
+		{
+			gameObject.alive = false;
+			((Ring) gameObject).collected = true;
+		}
+		if(gameObject instanceof Rock)
+		{
+			alive = false;
+		}
+	}
 }
 
