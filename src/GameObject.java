@@ -1,10 +1,13 @@
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.util.ArrayList;
 import java.util.Random;
 
 
 public abstract class GameObject
 {
+	public ArrayList<Particle> particles = new ArrayList<Particle>();
+	public boolean particleGen = true;
 	public boolean alive = true;
     public int x;
     public int y;
@@ -14,10 +17,11 @@ public abstract class GameObject
     // y velocity
     public double xvel;
     public double yvel;
-    public final double gravity = .5;
+    public final double gravity = .4;
     protected Image image;
     protected Random rnd = new Random();
     protected String path;
+    public int groundHeight = App.HEIGHT - 100;
     public Render getRender() {
 
         Render r = new Render();
@@ -33,6 +37,7 @@ public abstract class GameObject
     }
     public void update(){}
     public void doCollide(GameObject gameObject){}
+    public void deathUpdate(GameObjectHandler gameObjectHandler){}
 	private boolean collide(Rectangle r)
 	{
 		 if(r.intersects(new Rectangle((int)x, (int)y, (int)width, (int)height)))return true;

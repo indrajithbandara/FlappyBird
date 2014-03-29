@@ -5,7 +5,9 @@ public class Background {
     public int x = 0;
     public int y = 0;
     private Image image;
-
+    public void update(){
+    	x -= 5;
+    }
     public Render getRender() {
 
         Render r = new Render();
